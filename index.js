@@ -1,0 +1,200 @@
+const express = require("express");
+const fs = require("fs");
+const app = express();
+
+app.use(express.json());
+
+app.get("/api/get/graph_data", (req, res) => {
+  fs.readFile("points_data.json", "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading JSON file:", err);
+      res.status(500).send({ error: "Failed to load graph data" });
+      return;
+    }
+
+    // Parse and send JSON data
+    try {
+      const jsonData = JSON.parse(data);
+      res.send(jsonData);
+    } catch (parseError) {
+      console.error("Error parsing JSON:", parseError);
+      res.status(500).send({ error: "Invalid JSON format" });
+    }
+  });
+});
+
+app.get("/api/get/machine_list", (req, res) => {
+  let data = {
+    "statusCode": 200,
+    "status": "success",
+    "message": "Machines fetched successfully.",
+    "data":[
+    {
+      machine_id: 1,
+      name: "CNC  bA",
+      data_collection: true,
+      batch_tool_change: "2024-12-28T10:00:00Z",
+      program: "1234",
+      cards: [
+        {
+          id: 1,
+          unique_id: "card-1-1",
+          name: "Card A1",
+          nsequence_list: ["seq1-A", "seq2-A", "seq3-A"],
+          active_nsequence_index: 0,
+          cummulative_load: 150,
+          auto_tool_change: true,
+          current_ppe_value: "1",
+          fixed_ppe_value: "5",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 2,
+          unique_id: "card-1-2",
+          name: "Card A2",
+          nsequence_list: ["seq1-B", "seq2-B", "seq3-B"],
+          active_nsequence_index: 0,
+          cummulative_load: 150,
+          auto_tool_change: true,
+          current_ppe_value: "5",
+          fixed_ppe_value: "10",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 3,
+          unique_id: "card-1-3",
+          name: "Card A3",
+          nsequence_list: ["seq1-C", "seq2-C", "seq3-C"],
+          active_nsequence_index: 0,
+          cummulative_load: 150,
+          auto_tool_change: true,
+          current_ppe_value: "60%",
+          fixed_ppe_value: "75%",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+      ],
+    },
+    {
+      machine_id: 2,
+      name: "CNC thf B",
+      data_collection: false,
+      batch_tool_change: "2024-12-30T14:30:00Z",
+      program: "1234",
+      cards: [
+        {
+          id: 4,
+          unique_id: "card-2-1",
+          name: "Card B1",
+          nsequence_list: ["seq1-D", "seq2-D", "seq3-D"],
+          active_nsequence_index: 0,
+          cummulative_load: 200,
+          auto_tool_change: false,
+          current_ppe_value: "10",
+          fixed_ppe_value: "15",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 5,
+          unique_id: "card-2-2",
+          name: "Card B2",
+          nsequence_list: ["seq1-E", "seq2-E", "seq3-E"],
+          active_nsequence_index: 1,
+          cummulative_load: 250,
+          auto_tool_change: true,
+          current_ppe_value: "20",
+          fixed_ppe_value: "25",
+          status: "inactive",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 6,
+          unique_id: "card-2-3",
+          name: "Card B3",
+          nsequence_list: ["seq1-F", "seq2-F", "seq3-F"],
+          active_nsequence_index: 2,
+          cummulative_load: 300,
+          auto_tool_change: true,
+          current_ppe_value: "30%",
+          fixed_ppe_value: "50%",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+      ],
+    },
+    {
+      machine_id: 3,
+      name: "CNC shubham C",
+      data_collection: true,
+      batch_tool_change: "2025-01-05T09:15:00Z",
+      program: "1234",
+      cards: [
+        {
+          id: 7,
+          unique_id: "card-3-1",
+          name: "Card C1",
+          nsequence_list: ["seq1-G", "seq2-G", "seq3-G"],
+          active_nsequence_index: 0,
+          cummulative_load: 350,
+          auto_tool_change: true,
+          current_ppe_value: "40",
+          fixed_ppe_value: "60",
+          status: "inactive",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 8,
+          unique_id: "card-3-2",
+          name: "Card C2",
+          nsequence_list: ["seq1-H", "seq2-H", "seq3-H"],
+          active_nsequence_index: 1,
+          cummulative_load: 400,
+          auto_tool_change: false,
+          current_ppe_value: "50",
+          fixed_ppe_value: "70",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+        {
+          id: 9,
+          unique_id: "card-3-3",
+          name: "Card C3",
+          nsequence_list: ["seq1-I", "seq2-I", "seq3-I"],
+          active_nsequence_index: 2,
+          cummulative_load: 450,
+          auto_tool_change: true,
+          current_ppe_value: "60%",
+          fixed_ppe_value: "80%",
+          status: "active",
+          card_status: "0",
+          tool_life_consumed: "89",
+        },
+      ],
+    },
+  ]};
+  // Parse and send JSON data
+  try {
+    const jsonData = data ? data : JSON.parse(data);
+    res.send(jsonData);
+  } catch (parseError) {
+    console.error("Error parsing JSON:", parseError);
+    res.status(500).send({ error: "Invalid JSON format" });
+  }
+});
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
