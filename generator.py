@@ -29,12 +29,12 @@ def generate_json_points(num_points, output_file):
         })
 
         # Increment time by 5 minutes for each point
-        current_time += timedelta(minutes=5)
+        current_time += timedelta(seconds=5)
 
     # Write data to a JSON file
     with open(output_file, "w") as f:
         json.dump(data, f, indent=2)
 
 # Generate 5000 points and save to a file
-print("hey");
+
 generate_json_points(num_points=5000, output_file="points_data.json")
