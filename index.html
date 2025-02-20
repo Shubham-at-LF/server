@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket STOMP Client</title>
+  <!-- Include SockJS and STOMP libraries from a CDN without integrity attributes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #machineUpdates, #analyticsData {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    p {
+      margin: 5px 0;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Machine Updates</h1>
+  <div id="machineUpdates"></div>
+
+  <h1>Analytics Data</h1>
+  <div id="analyticsData"></div>
+
+  <script>
+    // Connect to the WebSocket endpoint using SockJS
+    const socket = new SockJS('http://127.0.0.1:8080/ws');
+    const stompClient = Stomp.over(socket);
+
+    // Connect and subscribe to topics
+    stompClient.connect({}, function(frame) {
+      console.log('Connected: ' + frame);
+
+      // Subscribe to machine updates topic
+      stompClient.subscribe('/topic/updates', function(message) {
+        const data = JSON.parse(message.body);
+        const updatesDiv = document.getElementById('machineUpdates');
+        const p = document.createElement('p');
+        p.textContent = JSON.stringify(data, null, 2);
+        updatesDiv.appendChild(p);
+      });
+
+      // Subscribe to analytics data topic
+      stompClient.subscribe('/topic/analytics', function(message) {
+        const data = JSON.parse(message.body);
+        const analyticsDiv = document.getElementById('analyticsData');
+        const p = document.createElement('p');
+        p.textContent = JSON.stringify(data, null, 2);
+        analyticsDiv.appendChild(p);
+      });
+    }, function(error) {
+      console.error('STOMP error: ' + error);
+    });
+  </script>
+</body>
+</html>
